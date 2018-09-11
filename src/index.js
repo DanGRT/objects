@@ -1,16 +1,27 @@
 const getStaticBuilding = () => {
+  return {
+    numberOfFloors: 5,
+    numberOfWindows: 8
+  }
   // return an object representing a building
   // it should 2 properties: `numberOfFloors` and `numberOfWindows`
   // numberOfFloors should have the value 5 and numberOfWindows should have the value 8
 }
 
 const getBuilding = (numberOfFloors, numberOfWindows) => {
+  return {
+    numberOfFloors,
+    numberOfWindows,
+  }
   // function receives two parameters: numberOfFloors and numberOfWindows
   // return a building object with 2 properties: `numberOfFloors` and `numberOfFloors`
   // the values of the properties should be set from input parameters
 }
 
+
 const getHeight = (mountains, name) => {
+  const height = mountains[name]
+  return height
   // function receives two arguments: an object called mountains and a string called name
   // mountains contains mountain names as keys and their height as values
 
@@ -18,6 +29,19 @@ const getHeight = (mountains, name) => {
 }
 
 const getCar = () => {
+  return {
+    speed: 0,
+
+    faster: function(){
+      this.speed = this.speed + 10
+    },
+
+    slower: function(){
+      this.speed = this.speed - 10
+    }
+
+
+  }
   // return a new car object.
   // The car object should have one property: `speed` which should be initialised to 0
   // The car should also have two methods `faster` and `slower`
@@ -26,6 +50,24 @@ const getCar = () => {
 }
 
 const getLimitedCar = topSpeed => {
+  return {
+    speed: 0,
+    topSpeed,
+
+    faster: function(){
+      this.speed = this.speed + 10
+      if (this.speed > this.topSpeed){
+        this.speed = this.topSpeed
+      }
+    },
+
+    slower: function(){
+      this.speed = this.speed - 10
+      if (this.speed < 0){
+        this.speed = 0;
+      }
+    }
+  }
   // function receives one parameter, an integer called topSpeed.
   // return a new car object with 2 properties: `currentSpeed` and `topSpeed`
   // currentSpeed should be initialised to 0
@@ -37,6 +79,11 @@ const getLimitedCar = topSpeed => {
 }
 
 const getAnimalNoise = (farm, animalName) => {
+  if (farm[animalName]  != undefined){
+    return farm[animalName]()
+  }else{
+    return "No such animal here"
+  }
   // the function receives two parameters: a farm object and a string which contains an animal name
   // the farm object has methods whose names are animal names. When called they return
   // the noise that animal makes.
@@ -47,13 +94,23 @@ const getAnimalNoise = (farm, animalName) => {
 }
 
 const teaBagsLeft = teaBags => {
+  return Object.values(teaBags)
+               .reduce((acc, item) => acc + item, 0)
+
   // function receives an object where keys are names of tea types
   // and values are the number of teaBags we have of that type.
-
   // return the total number teabags we have left
 }
 
-const convertBookArrayToMap = books => {
+
+  const convertBookArrayToMap = books => {
+    const bookMap = {};
+    books.forEach(book => bookMap[book.id] = book )
+    return bookMap;
+
+
+
+
   // the function receives an array of books where each book has an id, author, title and year
 
   // for example
@@ -79,6 +136,17 @@ const convertBookArrayToMap = books => {
 }
 
 const dogCount = dogs => {
+  const newObject = {};
+
+  dogs.forEach(dog => {
+    if (! newObject.hasOwnProperty(dog.location)){
+     newObject[dog.location] = 1
+   }else{
+     newObject[dog.location] += 1
+   }
+  })
+  return newObject
+
   // function receives an array of dogs, each dog has a name and location
   // for example
   // {
@@ -91,6 +159,19 @@ const dogCount = dogs => {
 }
 
 const dogNames = dogs => {
+  const newObject = {};
+  dogs.forEach(dog => {
+    if (! newObject.hasOwnProperty(dog.location)){
+      newObject[dog.location] = [dog.name]
+    }else {
+      let nameArray = newObject[dog.location]
+      nameArray.push(dog.name)
+      newObject[dog.location] = nameArray
+    }
+
+  })
+  return newObject
+
   // function receives an array of dogs, each dog has a name and location
   // for example
   // {
@@ -104,6 +185,13 @@ const dogNames = dogs => {
 }
 
 const fruitMarket = boxes => {
+  const newObject = {}
+  boxes.forEach(box => {
+    ! newObject.hasOwnProperty(box.contents)
+      ? newObject[box.contents] = box.number
+      : newObject[box.contents] += box.number
+  })
+  return newObject
   // function receives an array of fruit box objects.
   // each fruit box object has a name and number of contents
   // for example
@@ -117,6 +205,28 @@ const fruitMarket = boxes => {
 }
 
 const averageFruitPerBox = boxes => {
+  const newObject = {}
+  //Iterate through boxes and add contents value as key in new object
+  //Add number of fruits in each box into array as corresponding value
+  boxes.forEach(box => {
+    if (! newObject.hasOwnProperty(box.contents)){
+      newObject[box.contents] = [box.number]
+    }else{
+      let numberArray = newObject[box.contents]
+      numberArray.push(box.number)
+      newObject[box.contents] = numberArray
+    }
+  })
+  const keyArray = Object.keys(newObject)
+  // Calculate averages of new object
+  keyArray.forEach(key => {
+    let sum = newObject[key].reduce((acc,item) => acc + item)
+    let average = sum / newObject[key].length
+    newObject[key] = average
+  })
+  return newObject
+
+
   // function receives an array of fruit box objects.
   // each fruit box object has a name and number of contents
   // for example
@@ -132,8 +242,15 @@ const averageFruitPerBox = boxes => {
 /* STRETCH GOALS */
 
 const calculateOrderPrice = (menu, order) => {
-  // function receives two parameters: `menu` and `order`
+  let sum = 0;
+  const orderedItems = Object.keys(order)
+  orderedItems.forEach(item => {
+    sum += menu[item] * order[item]
 
+  })
+  return sum
+
+  // function receives two parameters: `menu` and `order`
   // menu has item names as keys and prices as values
   // order has item names as keys and quantities as values
 
@@ -142,6 +259,28 @@ const calculateOrderPrice = (menu, order) => {
 
 
 const calculateOrderPriceWithType = (menu, order, type) => {
+  let sum = 0;
+
+  const charges = {
+    eatIn: function(priceBeforeCharge){
+      return priceBeforeCharge += (priceBeforeCharge * 0.1)
+    },
+
+    takeAway: function(priceBeforeCharge){
+      return priceBeforeCharge += 5
+  }
+
+  }
+
+  const orderedItems = Object.keys(order)
+  orderedItems.forEach(item => {
+     sum += menu[item] * order[item]
+  })
+
+  let finalPrice = charges[type](sum)
+  return finalPrice
+
+
   // function receives three parameters: `menu`, `order` and `type`
 
   // menu has item names as keys and prices as values
@@ -154,7 +293,6 @@ const calculateOrderPriceWithType = (menu, order, type) => {
   // hint: you can create an object with methods that calculate the charges and call the relevant one using
   // the order type provided
 }
-
 module.exports = {
   getStaticBuilding,
   getBuilding,

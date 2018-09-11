@@ -324,7 +324,7 @@ test('calculate order price', () => {
   expect(output).toEqual(29);
 });
 
-test('calculate order price with type - eat in', () => {
+test.only('calculate order price with type - eat in', () => {
   const menu = {
     hotdog: 8,
     burger: 10,
@@ -342,7 +342,7 @@ test('calculate order price with type - eat in', () => {
   expect(output).toEqual(44);
 });
 
-test('calculate order price with type - take away', () => {
+test.only('calculate order price with type - take away', () => {
   const menu = {
     hotdog: 8,
     burger: 10,
@@ -357,5 +357,5 @@ test('calculate order price with type - take away', () => {
   };
 
   const output = calculateOrderPriceWithType(menu, order, 'takeAway');
-  expect(output).toEqual(43);
+  expect(output).toEqual(45);
 });
